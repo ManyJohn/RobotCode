@@ -115,7 +115,7 @@ public class JohnRobot extends Robot {
 
 		getTarget(e.getBearing());
 		//smartFire(e.getDistance());
-		fire(2.5);
+		fire(2.6);
 		double absoluteBearing = getHeading() + e.getBearing();
 		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
 		// Generates another scan event if we see a robot.
