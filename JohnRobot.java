@@ -113,14 +113,9 @@ public class JohnRobot extends Robot {
 		roundCounter = 0;		
 		foundTarget = true;
 
-		getTarget(e.getBearing());
+		getTarget(e.getBearing());	
 		
-		// turn the body of the bot towwards enemy
-		turnRight(e.getBearing());
-		ahead(e.getDistance() + 100);
 		
-		//scan(); // Might want to move ahead again!
-		//smartFire(e.getDistance());
 		fire(2.6);
 		double absoluteBearing = getHeading() + e.getBearing();
 		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
@@ -147,16 +142,9 @@ public class JohnRobot extends Robot {
 	
 	public void onHitRobot(HitRobotEvent e){
 		getTarget(e.getBearing());
-		double enemyEnergy = e.getEnergy();
-		if (enemyEnergy > 70 ){
-			smartFire(30);
-			turnGunRight(turnGunAmt);
-			reverseDirection();
-		}else{
-			ramingFire(enemyEnergy);
-			ahead(40);
-		}
-		
+		smartFire(30);
+		reverseDirection();
+		turnGunRight(turnGunAmt);
 	}
 	
 
