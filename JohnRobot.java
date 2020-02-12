@@ -114,6 +114,12 @@ public class JohnRobot extends Robot {
 		foundTarget = true;
 
 		getTarget(e.getBearing());
+		
+		// turn the body of the bot towwards enemy
+		turnRight(e.getBearing());
+		ahead(e.getDistance() + 100);
+		
+		//scan(); // Might want to move ahead again!
 		//smartFire(e.getDistance());
 		fire(2.6);
 		double absoluteBearing = getHeading() + e.getBearing();
@@ -121,9 +127,12 @@ public class JohnRobot extends Robot {
 		// Generates another scan event if we see a robot.
 		// We only need to call this if the gun (and therefore radar)
 		// are not turning.  Otherwise, scan is called automatically.
+		
 		if (bearingFromGun == 0) {
 			scan();
 		}
+		
+		
 	}
 
 	/**
@@ -138,12 +147,32 @@ public class JohnRobot extends Robot {
 	
 	public void onHitRobot(HitRobotEvent e){
 		getTarget(e.getBearing());
-		smartFire(30);
-		//rightTrunRandomAngle();
-		reverseDirection();
-		turnGunRight(turnGunAmt);
+		double enemyEnergy = e.getEnergy();
+		if (enemyEnergy > 70 ){
+			smartFire(30);
+			turnGunRight(turnGunAmt);
+			reverseDirection();
+		}else{
+			ramingFire(enemyEnergy);
+			ahead(40);
+		}
+		
 	}
 	
+
+	public void ramingFire (double enemyEnergy){
+		if (enemyEnergy > 16) {
+			fire(3);
+		} else if (enemyEnergy > 10) {
+			fire(2);
+		} else if (enemyEnergy > 4) {
+			fire(1);
+		} else if (enemyEnergy > 2) {
+			fire(.5);
+		} else if (enemyEnergy > .4) {
+			fire(.1);
+		}
+	}
 
 	public void smartFire(double robotDistance) {
 		if (robotDistance > 200 || getEnergy() < 15) {
