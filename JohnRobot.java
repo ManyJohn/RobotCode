@@ -12,6 +12,7 @@ import static robocode.util.Utils.normalRelativeAngleDegrees;
  */
 public class JohnRobot extends Robot {
 	boolean movingForward;
+	int turnDirection = 1; // Clockwise or counterclockwise
 	int counter;
 	int roundCounter=1 ;
 	double turnGunAmt = 60;
@@ -28,7 +29,7 @@ public class JohnRobot extends Robot {
 	 */
 	
 	public void run() {
-		setAdjustGunForRobotTurn(true);
+		//setAdjustGunForRobotTurn(true);
 
 			moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
 			peek = false;
@@ -36,30 +37,10 @@ public class JohnRobot extends Robot {
 			ahead(moveAmount);
 			// Turn the gun to turn right 90 degrees.
 			peek = true;
-			turnGunRight(90);
 			turnRight(90);
 
 		while (true) {
-			roundCounter += 1;
-			turnGunRight(turnGunAmt);	
-			if  (roundCounter >=6 ) {
-				turnGunAmt *= -1;
-				roundCounter= 0;
-				foundTarget = false; 
-			}
-			
-			roundCounter += 1;
-			movingForward = true;
-			if ( foundTarget && roundCounter ==0  )	{
-				// I found a Target just now
-				// do not move
-			}else{
-				//moveRandomStep(movingForward);
-			}
-			
-			//rightTrunRandomAngle();
-			//turnGunRight(30);
-	
+			turnRight(360);
 		}
 	}
 	
@@ -116,23 +97,15 @@ public class JohnRobot extends Robot {
 	 * onScannedRobot: What to do when you see another robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
-		
-		roundCounter = 0;		
-		foundTarget = true;
-
-		getTarget(e.getBearing());	
-		fire(3);
-		double absoluteBearing = getHeading() + e.getBearing();
-		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
-		// Generates another scan event if we see a robot.
-		// We only need to call this if the gun (and therefore radar)
-		// are not turning.  Otherwise, scan is called automatically.
-		
-		if (bearingFromGun == 0) {
-			scan();
+		if (e.getBearing() >= 0) {
+			turnDirection = 1;
+		} else {
+			turnDirection = -1;
 		}
-		
-		
+
+		turnRight(e.getBearing());
+		ahead(e.getDistance() + 20);
+		scan(); // Might want to move ahead again!
 	}
 
 	/**
@@ -141,16 +114,23 @@ public class JohnRobot extends Robot {
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
 		
-		getTarget(e.getBearing());
+		turnRight(e.getBearing());
 		//rightTrunRandomAngle();
 		reverseDirection();
 	}
 	
 	public void onHitRobot(HitRobotEvent e){
-		getTarget(e.getBearing());
-		smartFire(30);
-		//reverseDirection();
-		//turnGunRight(turnGunAmt);
+				if (e.getBearing() >= 0) {
+			turnDirection = 1;
+		} else {
+			turnDirection = -1;
+		}
+		turnRight(e.getBearing());
+
+		// Determine a shot that won't kill the robot...
+		// We want to ram him instead for bonus points
+		fire(1.5);
+		ahead(40); // Ram him again!
 	}
 	
 
@@ -182,8 +162,7 @@ public class JohnRobot extends Robot {
 	 */
 	public void onHitWall(HitWallEvent e) {
 		// Replace the next line with any behavior you would like
-		rightTrunRandomAngle();
-		reverseDirection();
+		
 	}
 	
 	public void onBulletMissed(BulletMissedEvent event) {
