@@ -40,14 +40,6 @@ public class JohnRobot extends Robot {
 			turnRight(90);
 
 		while (true) {
-						roundCounter += 1;
-			turnGunRight(turnGunAmt);	
-			if  (roundCounter >=6 ) {
-				turnGunAmt *= -1;
-				roundCounter= 0;
-				foundTarget = false; 
-			}
-			
 			roundCounter += 1;
 			turnGunRight(turnGunAmt);	
 			if  (roundCounter >=6 ) {
@@ -56,15 +48,16 @@ public class JohnRobot extends Robot {
 				foundTarget = false; 
 			}
 			
+			roundCounter += 1;
 			movingForward = true;
 			if ( foundTarget && roundCounter ==0  )	{
 				// I found a Target just now
 				// do not move
 			}else{
-				moveRandomStep(movingForward);
+				//moveRandomStep(movingForward);
 			}
 			
-			rightTrunRandomAngle();
+			//rightTrunRandomAngle();
 			//turnGunRight(30);
 	
 		}
@@ -73,7 +66,7 @@ public class JohnRobot extends Robot {
 
 	public void moveRandomStep ( boolean isForward){
 		Random rand = new Random();
-		double distance = rand.nextDouble() *5*100 ; 
+		double distance = rand.nextDouble() *5*140 ; 
 		if (isForward){
 			ahead(distance);
 		}else{
@@ -128,9 +121,7 @@ public class JohnRobot extends Robot {
 		foundTarget = true;
 
 		getTarget(e.getBearing());	
-		
-		
-		fire(2.6);
+		fire(3);
 		double absoluteBearing = getHeading() + e.getBearing();
 		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
 		// Generates another scan event if we see a robot.
@@ -149,6 +140,7 @@ public class JohnRobot extends Robot {
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
+		
 		getTarget(e.getBearing());
 		//rightTrunRandomAngle();
 		reverseDirection();
@@ -157,8 +149,8 @@ public class JohnRobot extends Robot {
 	public void onHitRobot(HitRobotEvent e){
 		getTarget(e.getBearing());
 		smartFire(30);
-		reverseDirection();
-		turnGunRight(turnGunAmt);
+		//reverseDirection();
+		//turnGunRight(turnGunAmt);
 	}
 	
 
