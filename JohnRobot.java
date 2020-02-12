@@ -16,6 +16,12 @@ public class JohnRobot extends Robot {
 	int roundCounter=1 ;
 	double turnGunAmt = 60;
 	boolean foundTarget = false;
+	
+
+	boolean peek; // Don't turn if there's a robot there
+	double moveAmount; // How much to move
+	
+
 
 	/**
 	 * run: JohnRobot's default behavior
@@ -24,15 +30,15 @@ public class JohnRobot extends Robot {
 	public void run() {
 		setAdjustGunForRobotTurn(true);
 
-				
-		// Initialization of the robot should be put here
+			moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
+			peek = false;
+			turnLeft(getHeading() % 90);
+			ahead(moveAmount);
+			// Turn the gun to turn right 90 degrees.
+			peek = true;
+			turnGunRight(90);
+			turnRight(90);
 
-		// After trying out your robot, try uncommenting the import at the top,
-		// and the next line:
-
-		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
-
-		// Robot main loop
 		while (true) {
 			roundCounter += 1;
 			turnGunRight(turnGunAmt);	
@@ -52,7 +58,7 @@ public class JohnRobot extends Robot {
 			
 			rightTrunRandomAngle();
 			//turnGunRight(30);
-			
+	
 		}
 	}
 	
