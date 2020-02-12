@@ -40,6 +40,14 @@ public class JohnRobot extends Robot {
 			turnRight(90);
 
 		while (true) {
+						roundCounter += 1;
+			turnGunRight(turnGunAmt);	
+			if  (roundCounter >=6 ) {
+				turnGunAmt *= -1;
+				roundCounter= 0;
+				foundTarget = false; 
+			}
+			
 			roundCounter += 1;
 			turnGunRight(turnGunAmt);	
 			if  (roundCounter >=6 ) {
